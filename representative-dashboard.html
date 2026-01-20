@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Perwakilan Kelas - Kurikulum Smansaba</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Kurikulum Smansaba</span>
+            </div>
+            <div class="user-info">
+                <span class="welcome-text">Selamat datang, <span id="repName">Perwakilan Kelas</span></span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active" onclick="showSection('overview')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#schedule" class="nav-item" onclick="showSection('schedule')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Atur Jadwal Kelas</span>
+                </a>
+                <a href="#report" class="nav-item" onclick="showSection('report')">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Laporan Kehadiran</span>
+                </a>
+                <a href="#history" class="nav-item" onclick="showSection('history')">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat Laporan</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <p>Monitor dan laporkan kehadiran guru di kelas Anda</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="weeklyReports">0</h3>
+                            <p>Laporan Minggu Ini</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalReports">0</h3>
+                            <p>Total Laporan</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="className">-</h3>
+                            <p>Kelas Anda</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>Aksi Cepat</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('schedule')">
+                            <i class="fas fa-calendar-plus"></i>
+                            Atur Jadwal Kelas
+                        </button>
+                        <button class="action-btn" onclick="showSection('report')">
+                            <i class="fas fa-plus"></i>
+                            Buat Laporan Baru
+                        </button>
+                        <button class="action-btn" onclick="showSection('history')">
+                            <i class="fas fa-eye"></i>
+                            Lihat Riwayat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Weekly Schedule -->
+                <div class="schedule-overview">
+                    <h3>Jadwal Minggu Ini</h3>
+                    <div class="schedule-grid" id="scheduleGrid">
+                        <!-- Schedule will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Management Section -->
+            <section id="schedule" class="content-section">
+                <div class="section-header">
+                    <h2>Atur Jadwal Kelas</h2>
+                    <p>Kelola jadwal mata pelajaran untuk kelas Anda</p>
+                </div>
+
+                <div class="schedule-container">
+                    <div class="schedule-info">
+                        <div class="info-card">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <h4>Petunjuk Penggunaan</h4>
+                                <p>Atur jadwal mata pelajaran untuk setiap hari dalam seminggu. Jadwal ini akan digunakan untuk mempermudah pelaporan kehadiran guru.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-form-container">
+                        <form id="scheduleForm" class="schedule-form">
+                            <div class="days-tabs">
+                                <button type="button" class="day-tab active" data-day="1" onclick="switchDay(1)">Senin</button>
+                                <button type="button" class="day-tab" data-day="2" onclick="switchDay(2)">Selasa</button>
+                                <button type="button" class="day-tab" data-day="3" onclick="switchDay(3)">Rabu</button>
+                                <button type="button" class="day-tab" data-day="4" onclick="switchDay(4)">Kamis</button>
+                                <button type="button" class="day-tab" data-day="5" onclick="switchDay(5)">Jumat</button>
+                            </div>
+
+                            <div class="day-schedule" id="daySchedule">
+                                <div class="day-header">
+                                    <h3 id="currentDayName">Senin</h3>
+                                    <button type="button" class="add-subject-btn" onclick="addScheduleSubject()">
+                                        <i class="fas fa-plus"></i>
+                                        Tambah Mata Pelajaran
+                                    </button>
+                                </div>
+
+                                <div class="subjects-list" id="subjectsList">
+                                    <!-- Schedule subjects will be added here -->
+                                </div>
+                            </div>
+
+                            <div class="schedule-actions">
+                                <button type="button" class="btn-secondary" onclick="loadSchedule()">
+                                    <i class="fas fa-refresh"></i>
+                                    Muat Ulang
+                                </button>
+                                <button type="submit" class="btn-submit">
+                                    <i class="fas fa-save"></i>
+                                    Simpan Jadwal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Current Schedule Display -->
+                    <div class="current-schedule">
+                        <h3>Jadwal Saat Ini</h3>
+                        <div class="schedule-week" id="scheduleWeek">
+                            <!-- Weekly schedule will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Section -->
+            <section id="report" class="content-section">
+                <div class="section-header">
+                    <h2>Laporan Kehadiran Guru</h2>
+                    <p>Laporkan kehadiran guru untuk setiap mata pelajaran</p>
+                </div>
+
+                <div class="report-container">
+                    <div class="today-schedule-info">
+                        <div class="schedule-status" id="scheduleStatus">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>Memuat jadwal hari ini...</span>
+                        </div>
+                    </div>
+
+                    <form id="attendanceForm" class="attendance-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reportDate">Tanggal</label>
+                                <input type="date" id="reportDate" name="reportDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="classInfo">Kelas</label>
+                                <input type="text" id="classInfo" name="classInfo" placeholder="Contoh: XII IPA 1" required readonly>
+                            </div>
+                        </div>
+
+                        <div class="subjects-container">
+                            <h3>Mata Pelajaran Hari Ini</h3>
+                            <div class="schedule-based-info">
+                                <p><i class="fas fa-lightbulb"></i> Mata pelajaran di bawah ini diambil dari jadwal yang telah Anda atur. Anda hanya perlu memilih status kehadiran untuk setiap guru.</p>
+                            </div>
+                            <div id="todaySubjectsGrid" class="today-subjects-grid">
+                                <!-- Today's subjects will be loaded here -->
+                            </div>
+                            
+                            <div class="manual-entry-section">
+                                <button type="button" class="toggle-manual-btn" onclick="toggleManualEntry()">
+                                    <i class="fas fa-plus"></i>
+                                    Tambah Mata Pelajaran Manual
+                                </button>
+                                <div id="manualSubjectsGrid" class="manual-subjects-grid" style="display: none;">
+                                    <!-- Manual subjects will be added here -->
+                                </div>
+                                <button type="button" class="add-subject-btn" onclick="addManualSubject()" style="display: none;" id="addManualBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Tambah Mata Pelajaran
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Catatan Tambahan</label>
+                            <textarea id="notes" name="notes" placeholder="Catatan khusus atau kejadian penting hari ini..." rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i>
+                            Kirim Laporan
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history" class="content-section">
+                <div class="section-header">
+                    <h2>Riwayat Laporan</h2>
+                    <p>Lihat semua laporan kehadiran yang telah dikirim</p>
+                </div>
+
+                <div class="history-container">
+                    <div class="history-filters">
+                        <div class="filter-group">
+                            <label for="filterMonth">Bulan</label>
+                            <select id="filterMonth">
+                                <option value="">Semua Bulan</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Agustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterYear">Tahun</label>
+                            <select id="filterYear">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="reports-list" id="reportsList">
+                        <!-- Reports will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="representative-dashboard.js"></script>
+</body>
+</html>
