@@ -8,7 +8,7 @@ let manualSubjectCounter = 0;
 let currentDay = 1; // Monday
 let classSchedule = {};
 let todaySchedule = [];
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = window.location.origin + '/api';
 
 // Real school data
 const SCHOOL_SUBJECTS = [
@@ -951,4 +951,5 @@ function logout() {
         localStorage.removeItem('adminUser');
         window.location.href = 'index.html';
     }
+
 }
